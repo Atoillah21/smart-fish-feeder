@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
@@ -11,9 +10,6 @@ import {
   Platform,
 } from "react-native";
 
-// mqtt (browser build)
-// import init from "react_native_mqtt"; // optional polyfill init for react native (not required if not installed)
-// use mqtt/dist/mqtt for webpack/browser build:
 import mqtt from "mqtt";
 
 // buffer polyfill
@@ -81,15 +77,12 @@ export default function App() {
 
     client.on("error", (err) => {
       console.warn("[MQTT] error", err);
-      // show only once
-      //Alert.alert("MQTT Error", String(err));
     });
 
     client.on("message", (topic, message) => {
       // message is a Buffer
       try {
         const payload = message.toString();
-        // console.log('[MQTT] message', topic, payload);
         const data = JSON.parse(payload);
 
         if (topic === TOPIC_LEVEL && data.level !== undefined) {
@@ -124,7 +117,6 @@ export default function App() {
     }
     try {
       const payload = JSON.stringify(obj);
-      // QoS 0 is fine; set retain false by default
       clientRef.current.publish(topic, payload, { qos: 0, retain: false }, (err) => {
         if (err) console.warn("publish err", err);
         else console.log("Published", topic, payload);
@@ -151,7 +143,7 @@ export default function App() {
     ]);
   };
 
-  // Render progress bar (simple)
+  // Render progress bar
   const renderProgress = () => {
     const pct = level === null ? 0 : Math.max(0, Math.min(100, level));
     return (
