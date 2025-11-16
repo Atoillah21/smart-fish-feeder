@@ -45,9 +45,9 @@ const ScheduleOnlyScreen = () => {
           value={searchText}
           onChangeText={setSearchText}
         />
-        <TouchableOpacity style={styles.iconButton}>
+        {/* <TouchableOpacity style={styles.iconButton}>
           <Text style={{ fontSize: 24 }}>📡</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Tabs */}

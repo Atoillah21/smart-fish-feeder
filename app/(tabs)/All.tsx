@@ -33,9 +33,7 @@ const SmartFishFeeder = () => {
   const [isFeeding, setIsFeeding] = useState(false);
 
   const [isOnline, setIsOnline] = useState(true);
-  const [isIdle, setIsIdle] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const foodLevel = 55; // in %
 
   useEffect(() => {
     const clientId = makeClientId();
@@ -149,6 +147,24 @@ const SmartFishFeeder = () => {
     ]);
   };
 
+  const timeAgo = (dateString) => {
+  if (!dateString) return "Belum tersedia";
+
+  const now = new Date();
+  const last = new Date(dateString);
+
+  const diffMs = now - last;
+  const diffMinutes = Math.floor(diffMs / 1000 / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMinutes < 1) return "Baru saja";
+  if (diffMinutes < 60) return `${diffMinutes} Min Ago`;
+  if (diffHours < 24) return `${diffHours} Hours Ago`;
+  return `${diffDays} Days Ago`;
+};
+
+
   // Simulate last feed time and next feed calculation
   const lastFeedTime = new Date();
   lastFeedTime.setMinutes(lastFeedTime.getMinutes() - 10); // 10 mins ago
@@ -214,9 +230,9 @@ const SmartFishFeeder = () => {
             onChangeText={setSearchText}
             style={styles.searchInput}
           />
-          <TouchableOpacity style={styles.filterButton}>
+          {/* <TouchableOpacity style={styles.filterButton}>
             <Text style={{ fontSize: 20 }}>⚙️</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Tabs */}
@@ -254,15 +270,19 @@ const SmartFishFeeder = () => {
         </View>
 
         {/* Last Feed and Action */}
+        <View style={styles.bottomTitle}>
+        <Text style={styles.botTitle1}>Last Feed</Text>
+        <Text style={styles.botTitle2}>Action</Text>
+        </View>
         <View style={styles.bottomSection}>
           {/* Last Feed */}
           <View style={styles.lastFeedBox}>
             <View style={styles.lastFeedTopRow}>
               <View style={styles.lastFeedBadge}>
-                <Text style={styles.lastFeedBadgeText}>10 Min Ago</Text>
+                <Text style={styles.lastFeedBadgeText}>{timeAgo(lastFeed)}</Text>
               </View>
               <View style={styles.lastFeedBadgeAuto}>
-                <Text style={styles.lastFeedBadgeText}>Auto</Text>
+                <Text style={styles.lastFeedBadgeText}>Manual</Text>
               </View>
             </View>
             <Text style={styles.feedTime}>
@@ -283,14 +303,15 @@ const SmartFishFeeder = () => {
 
           {/* Action */}
           <View style={styles.actionBox}>
+            <Text style={styles.actTitle}>Manual Feeding</Text>
             <TouchableOpacity style={styles.feedNowButton} onPress={onFeedNow}>
               <Text style={styles.feedNowButtonText}>Feed Now</Text>
             </TouchableOpacity>
             <Text style={styles.subText}>For 1x feed portion</Text>
 
-            <TouchableOpacity style={styles.tapHoldButton}>
+            {/* <TouchableOpacity style={styles.tapHoldButton}>
               <Text style={styles.tapHoldButtonText}>Tap and Hold</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text style={styles.subText}> </Text>
           </View>
         </View>
@@ -459,7 +480,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 10,
     marginTop: 10,
-    color: "#111111",
+    color: blueColor,
   },
   progressBackground: {
     marginHorizontal: 20,
@@ -492,6 +513,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 20,
     marginBottom: 40,
+    justifyContent: "space-between",
+  },
+  bottomTitle: {
+    flexDirection: "row",
+    marginHorizontal: 60,
+    marginTop: 20,
     justifyContent: "space-between",
   },
   lastFeedBox: {
@@ -548,6 +575,7 @@ const styles = StyleSheet.create({
   actionBox: {
     backgroundColor: blueColor,
     borderRadius: 15,
+    justifyContent: 'center',
     width: "48%",
     padding: 15,
     alignItems: "center",
@@ -558,6 +586,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 25,
     marginBottom: 5,
+    marginTop: 10,
     width: "100%",
   },
   feedNowButtonText: {
@@ -571,6 +600,26 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 12,
     marginBottom: 10,
+    textAlign: "center",
+  },
+  actTitle: {
+    color: "white",
+    fontWeight: "800",
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  botTitle1: {
+    color: blueColor,
+    fontWeight: "800",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  botTitle2: {
+    color: blueColor,
+    fontWeight: "800",
+    fontSize: 20,
+    marginRight: 10,
     textAlign: "center",
   },
   tapHoldButton: {
